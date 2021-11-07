@@ -46,6 +46,11 @@ class App extends Component {
       const imagesCount = await decentragram.methods.imageCount().call()
       this.setState({ imagesCount })
 
+      for(let i=0; i<= imagesCount; i++) {
+        const image = await decentragram.methods.images(i).call()
+        this.setState({ images: [...this.state.images, image] })
+      }
+
       return this.setState({ loading: false })
     }
     return window.alert('Decentragram contract not deployed to detected network')
@@ -80,7 +85,7 @@ class App extends Component {
     })
   }
 
-  tipImageOwner(id, tipAmount) {
+  tipImageOwner = (id, tipAmount) => {
     this.setState({ loading: true })
     this.state.decentragram.methods.tipImageOwner(id).send({ from: this.state.account, value: tipAmount }).on('transactionHash', (hash) => {
       this.setState({ loading: false })
@@ -107,6 +112,7 @@ class App extends Component {
               images={this.state.images}
               captureFile={this.captureFile}
               uploadImage={this.uploadImage}
+              tipImageOwner={this.tipImageOwner}
             />
           }
         
