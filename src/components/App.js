@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import Web3 from 'web3';
 import Identicon from 'identicon.js';
+import ipfsClient from 'ipfs-http-client'
+
 import './App.css';
 import Decentragram from '../abis/Decentragram.json'
 import Navbar from './Navbar'
 import Main from './Main'
 
+const ipfs = ipfsClient({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' })
 
 class App extends Component {
   async componentWillMount() {
@@ -59,6 +62,31 @@ class App extends Component {
     }
   }
 
+  uploadImage = (description) => {
+    console.log("Submitting file to ipfs...")
+
+    //adding file to the IPFS
+    ipfs.add(this.state.buffer, (error, result) => {
+      console.log('Ipfs result', result)
+      if(error) {
+        console.error(error)
+        return
+      }
+
+      this.setState({ loading: true })
+      this.state.decentragram.methods.uploadImage(result[0].hash, description).send({ from: this.state.account }).on('transactionHash', (hash) => {
+        this.setState({ loading: false })
+      })
+    })
+  }
+
+  tipImageOwner(id, tipAmount) {
+    this.setState({ loading: true })
+    this.state.decentragram.methods.tipImageOwner(id).send({ from: this.state.account, value: tipAmount }).on('transactionHash', (hash) => {
+      this.setState({ loading: false })
+    })
+  }
+
   constructor(props) {
     super(props)
     this.state = {
@@ -78,6 +106,7 @@ class App extends Component {
           : <Main
               images={this.state.images}
               captureFile={this.captureFile}
+              uploadImage={this.uploadImage}
             />
           }
         
