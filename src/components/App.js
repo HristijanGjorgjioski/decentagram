@@ -41,6 +41,9 @@ class App extends Component {
       const decentragram = web3.eth.Contract(Decentragram.abi, networkData.address)
       this.setState({ decentragram })
       const imagesCount = await decentragram.methods.imageCount().call()
+      this.setState({ imagesCount })
+
+      return this.setState({ loading: false })
     }
     return window.alert('Decentragram contract not deployed to detected network')
   }
