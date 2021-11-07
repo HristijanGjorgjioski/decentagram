@@ -46,4 +46,13 @@ contract Decentragram {
   }
 
   //* Tip Images
+  function tipImageOwner(uint _id) public payable {
+    // Fetch the image
+    Image memory _image = images[id];
+
+    // Fetch the author
+    address payable _author =  _image.author;
+
+    address(_author).transfer(1 ether);
+  }
 }
