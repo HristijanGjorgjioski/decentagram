@@ -26,6 +26,15 @@ contract Decentragram {
 
   //* Create Images
   function uploadImage(string memory _imgHash, string memory _description) public {
+    //* Make sure that the image exsist
+    require(bytes(_imgHash).length > 0);
+
+    //* Make sure that the description exsist
+    require(bytes(_description).length > 0);
+    
+    //* Make sure that uploader address exsist
+    require(msg.sender != address(0x0));
+
     //* Increment image id
     imageCount++;
 
