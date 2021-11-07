@@ -24,6 +24,14 @@ contract Decentragram {
     address payable author
   );
 
+  event ImageTipped(
+    uint id,
+    string hash,
+    string description,
+    uint tipAmount,
+    address payable author
+  );
+
   //* Create Images
   function uploadImage(string memory _imgHash, string memory _description) public {
     //* Make sure that the image exsist
@@ -53,6 +61,16 @@ contract Decentragram {
     // Fetch the author
     address payable _author =  _image.author;
 
-    address(_author).transfer(1 ether);
+    // Pay the author by sending them Ether
+    address(_author).transfer(msg.value);
+
+    // Increment the tip amount
+    _image.tipAmount = _image.tipAmount + msg.value;
+
+    // Update the image
+    images[id] = _image;
+
+    // Trigger an event
+    emit ImageTipped(_id, _image.hash, _image.description, _image.tipAmount, _author);
   }
 }
