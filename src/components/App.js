@@ -29,6 +29,7 @@ class App extends Component {
 
     // Fetch accounts
     const accounts = await web3.eth.getAccounts()
+    this.setState({ account: accounts[0] })
   }
 
   constructor(props) {
