@@ -55,8 +55,11 @@ contract Decentragram {
 
   //* Tip Images
   function tipImageOwner(uint _id) public payable {
+    // Make sure the id is valid
+    require(_id > 0 && _id <= imageCount);
+
     // Fetch the image
-    Image memory _image = images[id];
+    Image memory _image = images[_id];
 
     // Fetch the author
     address payable _author =  _image.author;
@@ -68,7 +71,7 @@ contract Decentragram {
     _image.tipAmount = _image.tipAmount + msg.value;
 
     // Update the image
-    images[id] = _image;
+    images[_id] = _image;
 
     // Trigger an event
     emit ImageTipped(_id, _image.hash, _image.description, _image.tipAmount, _author);
