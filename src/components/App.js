@@ -48,6 +48,17 @@ class App extends Component {
     return window.alert('Decentragram contract not deployed to detected network')
   }
 
+  captureFile = (event) => {
+    event.preventDefault()
+    const file = event.target.files[0]
+    const reader = new window.FileReader()
+    reader.readAsArrayBuffer(file)
+
+    reader.onloadend = () => {
+      this.setState({ buffer: Buffer(reader.result) })
+    }
+  }
+
   constructor(props) {
     super(props)
     this.state = {
@@ -65,10 +76,11 @@ class App extends Component {
         { this.state.loading
           ? <div id="loader" className="text-center mt-5"><p>Loading...</p></div>
           : <Main
-            // Code...
+              images={this.state.images}
+              captureFile={this.captureFile}
             />
           }
-        }
+        
       </div>
     );
   }
